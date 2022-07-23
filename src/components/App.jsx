@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import styled from 'styled-components';
+import fetchImg from 'service/apiSersice';
+import ImageGallery from './ImageGallery/ImageGallery';
 
 
 export class App extends Component {
@@ -10,10 +12,14 @@ export class App extends Component {
     items:[],
   };
   componentDidMount() {  }
-  componentDidUpdate(prevProps, prevState) {} 
-onSubmit = value => {
-    this.setState({ query: value });
-    console.log(value);
+  componentDidUpdate(prevProps, prevState) { } 
+  
+  onSubmit = async (value) => {
+   await  this.setState({ query: value });
+  console.log(value);
+  const data = await fetchImg(this.state.query, this.state.page)
+  this.setState(prevState=> ( {items: [...prevState.items, ...data]}) )
+  console.log(this);
    
   };
 
@@ -21,6 +27,7 @@ onSubmit = value => {
     return (
       <Container>
         <Searchbar onSubmit={this.onSubmit} />
+        <ImageGallery images={this.state.items} />
       </Container>
     );
   }

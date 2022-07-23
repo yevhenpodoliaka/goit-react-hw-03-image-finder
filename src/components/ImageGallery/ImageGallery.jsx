@@ -1,16 +1,12 @@
-import React, { Component } from 'react'
-import { Gallery } from './ImageGallery.styled'
-export default class ImageGallery extends Component{
-    state = {
-    
-    }
-  componentDidMount() {  }
-  componentDidUpdate(prevProps, prevState) {} 
-    render() {
-        return <Gallery >
-            
+import { Gallery,ImageGalleryItem,ImageGalleryItemImg } from './ImageGallery.styled'
+export default function ImageGallery ({images}){
+      return <Gallery >
+        {images.map(img =><ImageGalleryItem key={img.id}>
+          <ImageGalleryItemImg src={img.webformatURL} alt={img.tags} />
+        </ImageGalleryItem>
+          )} 
         </Gallery>
-    }
+
 }
 
 
