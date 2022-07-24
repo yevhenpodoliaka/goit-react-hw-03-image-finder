@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import Searchbar from './Searchbar/Searchbar';
-import styled from 'styled-components';
+import Searchbar from '../Searchbar/Searchbar';
+import {Container}from'./App.styled'
 import fetchImg from 'service/apiSersice';
-import ImageGallery from './ImageGallery/ImageGallery';
-import Button from './Button/Button';
-import Loader from './Loader/Loader';
-import  Modal  from './Modal/Modal';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import Button from '../Button/Button';
+import Loader from '../Loader/Loader';
+import  Modal  from '../Modal/Modal';
+import Message from '../Message/Message';
+
 
 export class App extends Component {
   state = {
@@ -17,7 +19,6 @@ export class App extends Component {
     showModal: false,
     largeImageURL:null,
   };
-  componentDidMount() {}
   async componentDidUpdate(prevProps, prevState) {
     if (
       prevState.query !== this.state.query ||
@@ -30,7 +31,6 @@ export class App extends Component {
           items: [...prevState.items, ...data.hits],
           totalHits: data.totalHits,
         }));
-        console.log(this);
       } catch (error) {
       } finally {
         this.setState({ loading: false });
@@ -39,6 +39,9 @@ export class App extends Component {
   }
 
   onSubmit = value => {
+    if (value.trim() === '') {
+      return
+    }
     this.setState({ query: value, page: 1, items: [] });
   };
   handlerBtnLoadMore = () => {
@@ -56,35 +59,29 @@ export class App extends Component {
     }
   }
     toggleModal = () => {
-    this.setState(({showModal})=> ({
-      showModal:!showModal
+    this.setState(({showModal,largeImageURL})=> ({
+      showModal: !showModal,
+      largeImageURL:null,
     }))
   }
-  handleImgClick = (e) => {
-    this.setState({largeImageURL:e.target.dataset.link})
-    this.toggleModal()
+
+  setlargeImageURL = (url) => {
+    this.setState({ largeImageURL: url })
   }
   render() {
+const{totalHits,items,loading,largeImageURL,query}=this.state
     return (
       <Container>
         <Searchbar onSubmit={this.onSubmit} />
-        <ImageGallery images={this.state.items} onClick={this.handleImgClick} />
-        {<Loader visible={this.state.loading} />}
+        {totalHits === 0?<Message/>:<ImageGallery images={items} setUrl={this.setlargeImageURL} />}
+        {<Loader visible={loading} />}
         {this.showBtnLoadMore()&& (
           <Button onClick={this.handlerBtnLoadMore} />
         )}
-        {this.state.showModal && <Modal onClose={this.toggleModal} largeImageURL={this.state.largeImageURL}>
-
-         
-        </Modal>}
+        {largeImageURL && <Modal onClose={this.toggleModal}><img src={largeImageURL} alt={query} /></Modal>}
       </Container>
     );
   }
 }
 
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 16px;
-  padding-bottom: 24px;
-`;
+

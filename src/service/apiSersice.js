@@ -5,6 +5,5 @@ export default async function fetchImg(query, page) {
   const url = `${BASE_URL}?q=${query}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`;
   const response = await fetch(url);
   const data = await response.json();
-  console.log(data);
   return data;
 }

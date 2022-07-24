@@ -7,8 +7,7 @@ export const Overlay=styled.div`  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1200;`
+  background-color: rgba(0, 0, 0, 0.8);`
 
 export const ModalCard = styled.div`
   max-width: calc(100vw - 48px);

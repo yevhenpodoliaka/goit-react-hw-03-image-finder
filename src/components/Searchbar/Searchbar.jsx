@@ -1,27 +1,26 @@
 import React, { Component } from 'react';
-import{Header,Form,Btn,Input}from './Searchbar.styled'
+import PropTypes from 'prop-types';
+import { Header, Form, Btn, Input } from './Searchbar.styled';
 import { FiSearch } from 'react-icons/fi';
 
 export default class Searchbar extends Component {
   state = {
-    value: ''
-    
+    value: '',
   };
-  handleChange = (e) => {
-    this.setState({ value:e.target.value}) 
-  }
-  handleSabmit = (e) => {
+  handleChange = e => {
+    this.setState({ value: e.target.value });
+  };
+  handleSabmit = e => {
     e.preventDefault();
-      this.props.onSubmit(this.state.value)
-      this.setState({ value:''})
-
-  }
+    this.props.onSubmit(this.state.value);
+    this.setState({ value: '' });
+  };
   render() {
     return (
       <Header>
         <Form onSubmit={this.handleSabmit}>
           <Btn type="submit">
-            <FiSearch/>
+            <FiSearch />
           </Btn>
 
           <Input
@@ -37,7 +36,6 @@ export default class Searchbar extends Component {
     );
   }
 }
-
-
-
-
+Searchbar.propType = {
+  onSubmit: PropTypes.func.isRequired,
+};
