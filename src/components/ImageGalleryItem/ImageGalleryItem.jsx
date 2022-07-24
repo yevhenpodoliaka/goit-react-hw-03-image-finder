@@ -1,9 +1,9 @@
 import { GalleryItem, GalleryItemImg } from './ImageGalleryItem.styled'
 
-export default function ImageGalleryItem({ webformatURL, tags }) {
+export default function ImageGalleryItem({largeImageURL, webformatURL, tags ,onClick}) {
     return (
        <GalleryItem >
-          <GalleryItemImg src={webformatURL} alt={tags} />
+            <GalleryItemImg src={webformatURL} alt={tags} onClick={onClick} data-link={largeImageURL} />
         </GalleryItem> 
     )
     

@@ -5,6 +5,7 @@ import fetchImg from 'service/apiSersice';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
+import  Modal  from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -13,6 +14,8 @@ export class App extends Component {
     totalHits: null,
     items: [],
     loading: false,
+    showModal: false,
+    largeImageURL:null,
   };
   componentDidMount() {}
   async componentDidUpdate(prevProps, prevState) {
@@ -52,15 +55,28 @@ export class App extends Component {
       return true
     }
   }
+    toggleModal = () => {
+    this.setState(({showModal})=> ({
+      showModal:!showModal
+    }))
+  }
+  handleImgClick = (e) => {
+    this.setState({largeImageURL:e.target.dataset.link})
+    this.toggleModal()
+  }
   render() {
     return (
       <Container>
         <Searchbar onSubmit={this.onSubmit} />
-        <ImageGallery images={this.state.items} />
+        <ImageGallery images={this.state.items} onClick={this.handleImgClick} />
         {<Loader visible={this.state.loading} />}
         {this.showBtnLoadMore()&& (
           <Button onClick={this.handlerBtnLoadMore} />
         )}
+        {this.state.showModal && <Modal onClose={this.toggleModal} largeImageURL={this.state.largeImageURL}>
+
+         
+        </Modal>}
       </Container>
     );
   }
