@@ -4,13 +4,15 @@ import styled from 'styled-components';
 import fetchImg from 'service/apiSersice';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
+import Loader from './Loader/Loader';
 
 export class App extends Component {
   state = {
     query: '',
     page: 1,
-    totalHits:null,
+    totalHits: null,
     items: [],
+    loading: false,
   };
   componentDidMount() {}
   async componentDidUpdate(prevProps, prevState) {
@@ -18,24 +20,47 @@ export class App extends Component {
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
     ) {
-      const data = await fetchImg(this.state.query, this.state.page);
-        this.setState(prevState => ({ items: [...prevState.items, ...data.hits],totalHits:data.totalHits}));
-      console.log(this);
+      try {
+        this.setState({ loading: true });
+        const data = await fetchImg(this.state.query, this.state.page);
+        this.setState(prevState => ({
+          items: [...prevState.items, ...data.hits],
+          totalHits: data.totalHits,
+        }));
+        console.log(this);
+      } catch (error) {
+      } finally {
+        this.setState({ loading: false });
+      }
     }
   }
 
-  onSubmit =  value => {
-    this.setState({ query: value,page:1 });
+  onSubmit = value => {
+    this.setState({ query: value, page: 1, items: [] });
   };
   handlerBtnLoadMore = () => {
-    this.setState(prevState => ({page: prevState.page +1}));
-}
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+  showBtnLoadMore = () => {
+    if (this.state.loading) {
+      return false
+    }
+    if (this.state.items.length === this.state.totalHits) {
+      return false
+    }
+       if (this.state.totalHits > 12) {
+      return true
+    }
+  }
   render() {
     return (
       <Container>
         <Searchbar onSubmit={this.onSubmit} />
         <ImageGallery images={this.state.items} />
-        {this.state.totalHits > 12 && <Button onClick={ this.handlerBtnLoadMore} />}
+        {<Loader visible={this.state.loading} />}
+        {this.showBtnLoadMore()&& (
+          <Button onClick={this.handlerBtnLoadMore} />
+        )}
       </Container>
     );
   }
