@@ -48,13 +48,14 @@ export class App extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
   showBtnLoadMore = () => {
-    if (this.state.loading) {
+    const{loading,items,totalHits}=this.state
+    if (loading) {
       return false
     }
-    if (this.state.items.length === this.state.totalHits) {
+    if (items.length === totalHits) {
       return false
     }
-       if (this.state.totalHits > 12) {
+       if (totalHits > items.length) {
       return true
     }
   }
